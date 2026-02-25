@@ -1,0 +1,14 @@
+/home/nihal/Projects/onchain_rust_program/target/sbpf-solana-solana/release/deps/libserde-ac99e37b123a18bc.rmeta: /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/lib.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/integer128.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/mod.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/de.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/ser.rs /home/nihal/Projects/onchain_rust_program/target/sbpf-solana-solana/release/build/serde-0d5f8eac1eafbb77/out/private.rs
+
+/home/nihal/Projects/onchain_rust_program/target/sbpf-solana-solana/release/deps/libserde-ac99e37b123a18bc.rlib: /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/lib.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/integer128.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/mod.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/de.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/ser.rs /home/nihal/Projects/onchain_rust_program/target/sbpf-solana-solana/release/build/serde-0d5f8eac1eafbb77/out/private.rs
+
+/home/nihal/Projects/onchain_rust_program/target/sbpf-solana-solana/release/deps/serde-ac99e37b123a18bc.d: /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/lib.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/integer128.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/mod.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/de.rs /home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/ser.rs /home/nihal/Projects/onchain_rust_program/target/sbpf-solana-solana/release/build/serde-0d5f8eac1eafbb77/out/private.rs
+
+/home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/lib.rs:
+/home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/integer128.rs:
+/home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/mod.rs:
+/home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/de.rs:
+/home/nihal/.cargo/registry/src/index.crates.io-6f17d22bba15001f/serde-1.0.228/src/private/ser.rs:
+/home/nihal/Projects/onchain_rust_program/target/sbpf-solana-solana/release/build/serde-0d5f8eac1eafbb77/out/private.rs:
+
+# env-dep:OUT_DIR=/home/nihal/Projects/onchain_rust_program/target/sbpf-solana-solana/release/build/serde-0d5f8eac1eafbb77/out
