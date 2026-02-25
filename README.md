@@ -171,7 +171,11 @@ anchor test
 
 ### 🎬 One-Click Live Demo
 
-> **Note:** This script automatically detects your standard Solana CLI wallet (`~/.config/solana/id.json`). If you don't have one, it will generate an ephemeral test wallet and attempt to airdrop Devnet SOL. If the Helius faucet is rate-limited, the script will output the ephemeral wallet address so you can fund it manually via the [Solana Faucet](https://faucet.solana.com/).
+Want to see the system in action? Run the automated Devnet demo!
+
+> **Prerequisites (Devnet SOL):**
+> **Option A (Automatic):** The script automatically detects and utilizes your standard Solana CLI wallet (`~/.config/solana/id.json`). Please ensure it has Devnet SOL.
+> **Option B (Manual Funding):** If you don't have a local CLI wallet, create a temporary one (`solana-keygen new -o demo-wallet.json`), fund its address manually at **[https://faucet.solana.com/](https://faucet.solana.com/)**, and export it before running: `export ANCHOR_WALLET=./demo-wallet.json`
 
 ```bash
 # This will execute a full Queue and Task Lifecycle directly on Devnet
