@@ -154,7 +154,7 @@ stateDiagram-v2
 
 ```bash
 # Clone the repo
-git clone https://github.com/<YOUR_USERNAME>/solana-job-queue.git
+git clone https://github.com/Nihal-Pandey-2302/solana-job-queue.git
 cd solana-job-queue
 
 # Install dependencies
