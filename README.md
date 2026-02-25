@@ -4,9 +4,9 @@
 
 > _Demonstrating how Web2 patterns like Redis Queue, Celery, AWS SQS, and RabbitMQ can be redesigned using Solana's account model and runtime guarantees._
 
-[![Built with Anchor](https://img.shields.io/badge/Built%20with-Anchor-blue)](https://anchor-lang.com)
-[![Solana Devnet](https://img.shields.io/badge/Deployed-Devnet-green)](https://explorer.solana.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<a href="https://img.shields.io/badge/Built%20with-Anchor-blue" target="_blank" rel="noopener noreferrer">![Built with Anchor</a>](https://anchor-lang.com)
+<a href="https://img.shields.io/badge/Deployed-Devnet-green" target="_blank" rel="noopener noreferrer">![Solana Devnet</a>](https://explorer.solana.com)
+<a href="https://img.shields.io/badge/License-MIT-yellow.svg" target="_blank" rel="noopener noreferrer">![License: MIT</a>](https://opensource.org/licenses/MIT)
 
 ---
 
@@ -123,22 +123,22 @@ stateDiagram-v2
 ## 🚀 Quick Start & Live Deployment
 
 **Solana Devnet Program ID:**
-[`CADUfHFQg6ywjsUbkzdFxVgQ7Hh7bN2YPgxS5QBjeX4n`](https://explorer.solana.com/address/CADUfHFQg6ywjsUbkzdFxVgQ7Hh7bN2YPgxS5QBjeX4n?cluster=devnet)
+<a href="https://explorer.solana.com/address/CADUfHFQg6ywjsUbkzdFxVgQ7Hh7bN2YPgxS5QBjeX4n?cluster=devnet" target="_blank" rel="noopener noreferrer">`CADUfHFQg6ywjsUbkzdFxVgQ7Hh7bN2YPgxS5QBjeX4n`</a>
 
 **Devnet Transaction Proofs:**
 
-1. [Initialize Queue](https://explorer.solana.com/tx/5wWxariPDxHjANQhGg2G5fXe84qHmDdGvhy7u7pq4Mq6k7rFVvCs9pAkVvs6Ew27xkVukY44Nybn3auAomhrA55J?cluster=devnet)
-2. [Register Worker](https://explorer.solana.com/tx/4YP3C8Vza6f4FZ6QWSbjyXyhKJuovZM4MohZoXDSy3tWDVT416ct3D2Ep1t6mvrGMtSUU1RjoHdv5hFdMmAsfU7q?cluster=devnet)
-3. [Enqueue Task](https://explorer.solana.com/tx/4L3zTro4Ds9HnBFt6PgdpANcSw7DYAskGPejeFewuwyMCdjjkKL71FSZE2xG6TMEy6zvWBvsyNnVR5KU62myswJC?cluster=devnet)
-4. [Process Task](https://explorer.solana.com/tx/499D2DkYBjSxeUWjgWn68gekC1r3anQnwKeLd1DpRi3LxuyLMqBqR4bMibWTnRAvGSFBmyyxADKVY9qGcWHZ9Ca2?cluster=devnet)
-5. [Complete Task](https://explorer.solana.com/tx/5hnKHrDmQzydkPKqdc7MsxSHZhXyoujnie9LhYeKBnXLf7AoJi4HcEaRXk7z8N2xVwwYm1gUnkXGEwaMwFvJHwQ6?cluster=devnet)
+1. <a href="https://explorer.solana.com/tx/5wWxariPDxHjANQhGg2G5fXe84qHmDdGvhy7u7pq4Mq6k7rFVvCs9pAkVvs6Ew27xkVukY44Nybn3auAomhrA55J?cluster=devnet" target="_blank" rel="noopener noreferrer">Initialize Queue</a>
+2. <a href="https://explorer.solana.com/tx/4YP3C8Vza6f4FZ6QWSbjyXyhKJuovZM4MohZoXDSy3tWDVT416ct3D2Ep1t6mvrGMtSUU1RjoHdv5hFdMmAsfU7q?cluster=devnet" target="_blank" rel="noopener noreferrer">Register Worker</a>
+3. <a href="https://explorer.solana.com/tx/4L3zTro4Ds9HnBFt6PgdpANcSw7DYAskGPejeFewuwyMCdjjkKL71FSZE2xG6TMEy6zvWBvsyNnVR5KU62myswJC?cluster=devnet" target="_blank" rel="noopener noreferrer">Enqueue Task</a>
+4. <a href="https://explorer.solana.com/tx/499D2DkYBjSxeUWjgWn68gekC1r3anQnwKeLd1DpRi3LxuyLMqBqR4bMibWTnRAvGSFBmyyxADKVY9qGcWHZ9Ca2?cluster=devnet" target="_blank" rel="noopener noreferrer">Process Task</a>
+5. <a href="https://explorer.solana.com/tx/5hnKHrDmQzydkPKqdc7MsxSHZhXyoujnie9LhYeKBnXLf7AoJi4HcEaRXk7z8N2xVwwYm1gUnkXGEwaMwFvJHwQ6?cluster=devnet" target="_blank" rel="noopener noreferrer">Complete Task</a>
 
 ### Prerequisites
 
-- [Rust](https://rustup.rs/) (1.75+)
-- [Solana CLI](https://docs.solana.com/cli/install-solana-cli-tools) (v1.18+)
-- [Anchor](https://www.anchor-lang.com/docs/installation) (v0.30+)
-- [Node.js](https://nodejs.org/) (v18+)
+- <a href="https://rustup.rs/" target="_blank" rel="noopener noreferrer">Rust</a> (1.75+)
+- <a href="https://docs.solana.com/cli/install-solana-cli-tools" target="_blank" rel="noopener noreferrer">Solana CLI</a> (v1.18+)
+- <a href="https://www.anchor-lang.com/docs/installation" target="_blank" rel="noopener noreferrer">Anchor</a> (v0.30+)
+- <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer">Node.js</a> (v18+)
 
 ### Build & Test
 
@@ -311,12 +311,12 @@ anchor test
 
 | Operation       | Transaction                                                                                                                                                |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Deploy Program  | [View on Explorer](https://explorer.solana.com/address/CADUfHFQg6ywjsUbkzdFxVgQ7Hh7bN2YPgxS5QBjeX4n?cluster=devnet)                                        |
-| Create Queue    | [View on Explorer](https://explorer.solana.com/tx/5wWxariPDxHjANQhGg2G5fXe84qHmDdGvhy7u7pq4Mq6k7rFVvCs9pAkVvs6Ew27xkVukY44Nybn3auAomhrA55J?cluster=devnet) |
-| Register Worker | [View on Explorer](https://explorer.solana.com/tx/4YP3C8Vza6f4FZ6QWSbjyXyhKJuovZM4MohZoXDSy3tWDVT416ct3D2Ep1t6mvrGMtSUU1RjoHdv5hFdMmAsfU7q?cluster=devnet) |
-| Enqueue Task    | [View on Explorer](https://explorer.solana.com/tx/4L3zTro4Ds9HnBFt6PgdpANcSw7DYAskGPejeFewuwyMCdjjkKL71FSZE2xG6TMEy6zvWBvsyNnVR5KU62myswJC?cluster=devnet) |
-| Process Task    | [View on Explorer](https://explorer.solana.com/tx/499D2DkYBjSxeUWjgWn68gekC1r3anQnwKeLd1DpRi3LxuyLMqBqR4bMibWTnRAvGSFBmyyxADKVY9qGcWHZ9Ca2?cluster=devnet) |
-| Complete Task   | [View on Explorer](https://explorer.solana.com/tx/5hnKHrDmQzydkPKqdc7MsxSHZhXyoujnie9LhYeKBnXLf7AoJi4HcEaRXk7z8N2xVwwYm1gUnkXGEwaMwFvJHwQ6?cluster=devnet) |
+| Deploy Program  | <a href="https://explorer.solana.com/address/CADUfHFQg6ywjsUbkzdFxVgQ7Hh7bN2YPgxS5QBjeX4n?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a>                                        |
+| Create Queue    | <a href="https://explorer.solana.com/tx/5wWxariPDxHjANQhGg2G5fXe84qHmDdGvhy7u7pq4Mq6k7rFVvCs9pAkVvs6Ew27xkVukY44Nybn3auAomhrA55J?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| Register Worker | <a href="https://explorer.solana.com/tx/4YP3C8Vza6f4FZ6QWSbjyXyhKJuovZM4MohZoXDSy3tWDVT416ct3D2Ep1t6mvrGMtSUU1RjoHdv5hFdMmAsfU7q?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| Enqueue Task    | <a href="https://explorer.solana.com/tx/4L3zTro4Ds9HnBFt6PgdpANcSw7DYAskGPejeFewuwyMCdjjkKL71FSZE2xG6TMEy6zvWBvsyNnVR5KU62myswJC?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| Process Task    | <a href="https://explorer.solana.com/tx/499D2DkYBjSxeUWjgWn68gekC1r3anQnwKeLd1DpRi3LxuyLMqBqR4bMibWTnRAvGSFBmyyxADKVY9qGcWHZ9Ca2?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| Complete Task   | <a href="https://explorer.solana.com/tx/5hnKHrDmQzydkPKqdc7MsxSHZhXyoujnie9LhYeKBnXLf7AoJi4HcEaRXk7z8N2xVwwYm1gUnkXGEwaMwFvJHwQ6?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
 
 ---
 
@@ -361,4 +361,4 @@ MIT
 
 ## 🙏 Acknowledgments
 
-Built for the [Superteam Poland "Rebuild Backend Systems as On-Chain Rust Programs"](https://earn.superteam.fun) challenge. This project aims to demonstrate that Solana is not just a cryptocurrency platform — it's a **distributed state machine backend** capable of running traditional infrastructure patterns with stronger guarantees around atomicity, auditability, and trust.
+Built for the <a href="https://superteam.fun/earn/listing/rebuild-production-backend-systems-as-on-chain-rust-programs" target="_blank" rel="noopener noreferrer">Superteam Poland "Rebuild Backend Systems as On-Chain Rust Programs"</a> challenge. This project aims to demonstrate that Solana is not just a cryptocurrency platform — it's a **distributed state machine backend** capable of running traditional infrastructure patterns with stronger guarantees around atomicity, auditability, and trust.
