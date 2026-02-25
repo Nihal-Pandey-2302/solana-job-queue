@@ -91,6 +91,16 @@ Job queues are everywhere in backend engineering — they power email delivery, 
 
 ---
 
+## 🏆 Architectural Highlights (Judging Focus)
+
+To explicitly address the Superteam bounty criteria, this program avoids common Web2-to-Solana anti-patterns:
+
+1. **No 10MB Account Limit Bottlenecks:** Instead of storing a `Vec<Task>` inside a single Queue account (which limits queue size and causes heavy serial write contention), _every single task is its own isolated PDA_. This allows theoretically infinite queue scalability and massively parallel processing.
+2. **Rent as Garbage Collection:** In Web2, processed messages are deleted or TTL-expired to save database space. On Solana, the `close_task` instruction allows the queue authority to delete the task PDA and **reclaim the SOL rent deposit**. This converts a traditional operational chore (DB cleanup) into an economic incentive.
+3. **Cost-Free Concurrency & DLQs:** We don't need distributed system locks (e.g., Redis `SETNX`). Solana's runtime inherently locks accounts being written to, making double-processing impossible. Failing tasks simply decrement a `retry_count` until they hit a permanent `Failed` state, mirroring Dead Letter Queue (DLQ) functionality natively.
+
+---
+
 ## 📐 Account Model
 
 ```mermaid
@@ -309,8 +319,8 @@ anchor test
 
 ### Transaction Links
 
-| Operation       | Transaction                                                                                                                                                |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Operation       | Transaction                                                                                                                                                                                                     |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Deploy Program  | <a href="https://explorer.solana.com/address/CADUfHFQg6ywjsUbkzdFxVgQ7Hh7bN2YPgxS5QBjeX4n?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a>                                        |
 | Create Queue    | <a href="https://explorer.solana.com/tx/5wWxariPDxHjANQhGg2G5fXe84qHmDdGvhy7u7pq4Mq6k7rFVvCs9pAkVvs6Ew27xkVukY44Nybn3auAomhrA55J?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
 | Register Worker | <a href="https://explorer.solana.com/tx/4YP3C8Vza6f4FZ6QWSbjyXyhKJuovZM4MohZoXDSy3tWDVT416ct3D2Ep1t6mvrGMtSUU1RjoHdv5hFdMmAsfU7q?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
