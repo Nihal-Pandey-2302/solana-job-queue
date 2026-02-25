@@ -167,6 +167,15 @@ anchor build
 anchor test
 ```
 
+### 🎬 One-Click Live Demo
+
+Want to see it in action immediately without setting up local wallets? Run the automated Devnet demo!
+
+```bash
+# This will generate an ephemeral wallet, grab Devnet SOL, and execute a full Task Lifecycle
+npm run demo
+```
+
 ### Deploy to Devnet
 
 ```bash
