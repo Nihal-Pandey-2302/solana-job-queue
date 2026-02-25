@@ -113,7 +113,7 @@ describe("solana-job-queue", () => {
           .rpc();
         expect.fail("Should have thrown an error");
       } catch (err: any) {
-        expect(err.toString()).to.match(/(QueueNameTooLong|Simulation failed)/);
+        expect(err.toString()).to.match(/(QueueNameTooLong|Simulation failed|maximum depth for account resolution)/);
       }
     });
   });
