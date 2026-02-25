@@ -171,10 +171,12 @@ anchor test
 
 ### 🎬 One-Click Live Demo
 
-Want to see it in action immediately without setting up local wallets? Run the automated Devnet demo!
+Want to see the system in action? Run the automated Devnet demo!
+
+> **Note:** This script automatically detects and utilizes your standard Solana CLI wallet (`~/.config/solana/id.json`). Please ensure you have Devnet SOL before running. If you don't, fund it via the [Solana Faucet](https://faucet.solana.com/).
 
 ```bash
-# This will generate an ephemeral wallet, grab Devnet SOL, and execute a full Task Lifecycle
+# This will execute a full Queue and Task Lifecycle directly on Devnet
 npm run demo
 ```
 
