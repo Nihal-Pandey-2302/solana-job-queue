@@ -22,7 +22,7 @@ This document provides a detailed analysis of how traditional backend job queue 
 
 | Web2 Concept                    | Solana Equivalent               | Notes                                                        |
 | ------------------------------- | ------------------------------- | ------------------------------------------------------------ |
-| Message Broker (Redis/RabbitMQ) | Solana Program (smart contract) | The program IS the broker — logic executes on-chain          |
+| Message Broker (Redis/RabbitMQ) | Solana Program (smart contract) | The program IS the broker - logic executes on-chain          |
 | Queue                           | PDA account (`Queue`)           | Each queue is a separate account with counters               |
 | Message/Job                     | PDA account (`Task`)            | Each task is a separate account with full lifecycle          |
 | Consumer/Worker                 | PDA account (`Worker`)          | Workers register on-chain, creating audit trail              |
@@ -73,7 +73,7 @@ pub struct Task {
 
 // PDA derivation replaces primary keys:
 // Address = hash(["task", queue_pubkey, task_id_bytes, program_id])
-// This is deterministic — anyone can re-derive the address from known inputs
+// This is deterministic - anyone can re-derive the address from known inputs
 ```
 
 ### Key Insight: Accounts as Rows
@@ -83,7 +83,7 @@ In Web2, you query a database table: `SELECT * FROM tasks WHERE queue_id = ? AND
 On Solana, there is no such query mechanism. Instead:
 
 - Each task has a **deterministic address** (PDA) derived from its queue and ID
-- To find task #5 in queue Q, you compute `PDA(["task", Q, 5])` — no table scan needed
+- To find task #5 in queue Q, you compute `PDA(["task", Q, 5])` - no table scan needed
 - To list all tasks, you iterate IDs from 0 to `queue.total_tasks - 1`
 - The **tradeoff**: no complex queries (WHERE clauses), but O(1) access to any specific task
 
@@ -118,7 +118,7 @@ job_data = redis.brpoplpush('pending_queue', 'processing_queue', timeout=30)
 // 1. The runtime acquires a WRITE LOCK on Task account T
 // 2. If two transactions try to modify T in the same slot,
 //    the second one FAILS (duplicate transaction or write conflict)
-// 3. No distributed locks needed — the runtime handles it
+// 3. No distributed locks needed - the runtime handles it
 //
 // This is equivalent to:
 // - Redis BRPOPLPUSH atomicity
@@ -178,7 +178,7 @@ if task.retry_count < task.max_retries {
 
 ### Key Insight: DLQ as State, Not Separate Queue
 
-In Web2, dead letter queues are **separate physical queues** where failed messages are routed. On Solana, the "DLQ" is simply the `Failed` state — the task account remains at the same address, just with a different status. This simplifies the architecture while maintaining the same observability (you can query failed tasks by iterating and checking status).
+In Web2, dead letter queues are **separate physical queues** where failed messages are routed. On Solana, the "DLQ" is simply the `Failed` state - the task account remains at the same address, just with a different status. This simplifies the architecture while maintaining the same observability (you can query failed tasks by iterating and checking status).
 
 ---
 
@@ -247,7 +247,7 @@ sqs.create_queue(QueueName=f"{tenant_id}-{queue_name}")
 // Tenant B creates "email-jobs" (same name!):
 //   PDA = hash(["queue", wallet_B, "email-jobs", program_id])
 //
-// Different addresses — complete isolation by design.
+// Different addresses - complete isolation by design.
 // No IAM policies, no virtual hosts, no key prefixes needed.
 ```
 
@@ -287,7 +287,7 @@ For 100,000 tasks/month: ~$300
 
 ### Key Insight: Rent as Refundable Deposit
 
-The biggest economic innovation is **rent reclamation**. In Web2, storage costs are sunk — once you pay for a Redis instance, that
+The biggest economic innovation is **rent reclamation**. In Web2, storage costs are sunk - once you pay for a Redis instance, that
 money is gone. On Solana, the rent deposited for task accounts is returned when you close the accounts. The actual cost is only the transaction fees (fractions of a cent per operation).
 
 ---
@@ -326,7 +326,7 @@ money is gone. On Solana, the rent deposited for task accounts is returned when 
 - You need **trustless** task execution (no single operator to trust)
 - You need **public auditability** (every state change is verifiable)
 - You need **atomic concurrency** without implementing distributed locks
-- You want **economic incentives** — rent reclamation rewards cleanup
+- You want **economic incentives** - rent reclamation rewards cleanup
 - Multi-party coordination where parties don't trust each other
 - Regulatory compliance requires immutable audit trails
 

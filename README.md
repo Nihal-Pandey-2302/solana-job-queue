@@ -1,6 +1,6 @@
 # 🔗 Solana Job Queue
 
-**A traditional backend job queue — rebuilt entirely on-chain as a Solana program.**
+**A traditional backend job queue - rebuilt entirely on-chain as a Solana program.**
 
 > _Demonstrating how Web2 patterns like Redis Queue, Celery, AWS SQS, and RabbitMQ can be redesigned using Solana's account model and runtime guarantees._
 
@@ -12,18 +12,18 @@
 
 ## 📖 Overview
 
-Job queues are everywhere in backend engineering — they power email delivery, webhook processing, notification systems, background data pipelines, and scheduled tasks. This project rebuilds the core logic of a production job queue as a **Solana on-chain program**, demonstrating how familiar Web2 patterns translate to blockchain architecture.
+Job queues are everywhere in backend engineering - they power email delivery, webhook processing, notification systems, background data pipelines, and scheduled tasks. This project rebuilds the core logic of a production job queue as a **Solana on-chain program**, demonstrating how familiar Web2 patterns translate to blockchain architecture.
 
 ### Key Features
 
-- 🏢 **Multi-Tenant Queues** — Isolated queue instances per authority (like separate SQS queues)
-- 📨 **Task Lifecycle** — Full state machine: Pending → Processing → Completed/Failed
-- 🔄 **Automatic Retries** — Failed tasks re-queue up to N times (like Dead Letter Queues)
-- ⏰ **Scheduled Execution** — Tasks with `execute_after` timestamps (like SQS DelaySeconds)
-- ⚡ **Priority Levels** — 0-255 priority range for task ordering
-- 👷 **Worker Registry** — On-chain worker registration with performance tracking
-- 🔒 **Access Control** — Only registered, active workers can process tasks
-- 💰 **Rent Reclamation** — Close finished tasks to get SOL back
+- 🏢 **Multi-Tenant Queues** - Isolated queue instances per authority (like separate SQS queues)
+- 📨 **Task Lifecycle** - Full state machine: Pending → Processing → Completed/Failed
+- 🔄 **Automatic Retries** - Failed tasks re-queue up to N times (like Dead Letter Queues)
+- ⏰ **Scheduled Execution** - Tasks with `execute_after` timestamps (like SQS DelaySeconds)
+- ⚡ **Priority Levels** - 0-255 priority range for task ordering
+- 👷 **Worker Registry** - On-chain worker registration with performance tracking
+- 🔒 **Access Control** - Only registered, active workers can process tasks
+- 💰 **Rent Reclamation** - Close finished tasks to get SOL back
 
 ---
 
@@ -69,8 +69,8 @@ Job queues are everywhere in backend engineering — they power email delivery, 
 
 | Component       | Implementation                                                      |
 | --------------- | ------------------------------------------------------------------- |
-| **State**       | PDA accounts — each task is a separate account                      |
-| **Concurrency** | Solana runtime's account write-locks (FREE — no distributed locks!) |
+| **State**       | PDA accounts - each task is a separate account                      |
+| **Concurrency** | Solana runtime's account write-locks (FREE - no distributed locks!) |
 | **Ordering**    | Sequential task IDs + priority field per task                       |
 | **Auth**        | PDA ownership + `Signer` constraints + `has_one` checks             |
 | **Retry**       | `retry_count` / `max_retries` → automatic re-queue to Pending       |
@@ -84,10 +84,10 @@ Job queues are everywhere in backend engineering — they power email delivery, 
 | **Latency**      | Sub-millisecond (in-memory) | ~400ms (block confirmation)                                     |
 | **Data Size**    | Unlimited (disk/memory)     | Task payload capped at 512 bytes (account size limits)          |
 | **Cost**         | Server/instance costs       | ~0.002 SOL/task (rent, reclaimable)                             |
-| **Durability**   | Requires replication config | Automatic — blockchain is immutable by default                  |
-| **Auditability** | Custom logging/monitoring   | Free — every state change is a public, signed transaction       |
-| **Trust**        | Trust the operator          | Trustless — program logic is verifiable on-chain                |
-| **Concurrency**  | Manual distributed locks    | Free — runtime account-locking prevents race conditions         |
+| **Durability**   | Requires replication config | Automatic - blockchain is immutable by default                  |
+| **Auditability** | Custom logging/monitoring   | Free - every state change is a public, signed transaction       |
+| **Trust**        | Trust the operator          | Trustless - program logic is verifiable on-chain                |
+| **Concurrency**  | Manual distributed locks    | Free - runtime account-locking prevents race conditions         |
 
 ---
 
@@ -240,11 +240,11 @@ $CLI list-tasks --queue <QUEUE_ADDRESS> --status pending
 $CLI close-task --queue <QUEUE_ADDRESS> --task-id 0
 ```
 
-### Sample Output — Queue Status
+### Sample Output - Queue Status
 
 ```
 ╔══════════════════════════════════════════════════╗
-║          SOLANA JOB QUEUE — STATUS               ║
+║          SOLANA JOB QUEUE - STATUS               ║
 ╠══════════════════════════════════════════════════╣
 ║  Queue:        email-jobs                        ║
 ║  Max Retries:  3                                 ║
@@ -287,16 +287,16 @@ anchor test
 #     ✓ registers a worker
 #     ✓ registers a second worker
 #     ✓ deregisters a worker (soft-delete)
-#   Task Lifecycle — Happy Path
+#   Task Lifecycle - Happy Path
 #     ✓ enqueues a task with priority and payload
 #     ✓ enqueues a second task with higher priority
 #     ✓ worker processes (claims) a pending task
 #     ✓ worker completes a task with result
 #     ✓ authority closes a completed task and reclaims rent
-#   Task Lifecycle — Failure & Retry
+#   Task Lifecycle - Failure & Retry
 #     ✓ worker processes → fails → task is re-queued (retry 1/3)
-#     ✓ retry 2/3 — fails again, re-queued
-#     ✓ retry 3/3 — fails permanently (dead letter)
+#     ✓ retry 2/3 - fails again, re-queued
+#     ✓ retry 3/3 - fails permanently (dead letter)
 #     ✓ can close a permanently failed task
 #   Scheduled Tasks
 #     ✓ enqueues a task with future execute_after
@@ -371,4 +371,4 @@ MIT
 
 ## 🙏 Acknowledgments
 
-Built for the <a href="https://superteam.fun/earn/listing/rebuild-production-backend-systems-as-on-chain-rust-programs" target="_blank" rel="noopener noreferrer">Superteam Poland "Rebuild Backend Systems as On-Chain Rust Programs"</a> challenge. This project aims to demonstrate that Solana is not just a cryptocurrency platform — it's a **distributed state machine backend** capable of running traditional infrastructure patterns with stronger guarantees around atomicity, auditability, and trust.
+Built for the <a href="https://superteam.fun/earn/listing/rebuild-production-backend-systems-as-on-chain-rust-programs" target="_blank" rel="noopener noreferrer">Superteam Poland "Rebuild Backend Systems as On-Chain Rust Programs"</a> challenge. This project aims to demonstrate that Solana is not just a cryptocurrency platform - it's a **distributed state machine backend** capable of running traditional infrastructure patterns with stronger guarantees around atomicity, auditability, and trust.
