@@ -16,7 +16,15 @@ async function run() {
   const connection = new anchor.web3.Connection("https://devnet.helius-rpc.com/?api-key=b68b97dc-101d-4736-9368-2a9ffec93463", "confirmed");
   
   let walletKeypair;
-  if (fs.existsSync("./deploy-keypair.json")) {
+  const defaultKeyPath = process.env.HOME + "/.config/solana/id.json";
+  
+  if (process.env.ANCHOR_WALLET && fs.existsSync(process.env.ANCHOR_WALLET)) {
+    console.log("1️⃣ Using ANCHOR_WALLET...");
+    walletKeypair = Keypair.fromSecretKey(new Uint8Array(JSON.parse(fs.readFileSync(process.env.ANCHOR_WALLET, "utf8"))));
+  } else if (fs.existsSync(defaultKeyPath)) {
+    console.log("1️⃣ Using local Solana CLI wallet (~/.config/solana/id.json)...");
+    walletKeypair = Keypair.fromSecretKey(new Uint8Array(JSON.parse(fs.readFileSync(defaultKeyPath, "utf8"))));
+  } else if (fs.existsSync("./deploy-keypair.json")) {
     console.log("1️⃣ Using local deploy-keypair.json...");
     walletKeypair = Keypair.fromSecretKey(new Uint8Array(JSON.parse(fs.readFileSync("./deploy-keypair.json", "utf8"))));
   } else {
@@ -29,7 +37,8 @@ async function run() {
       await connection.confirmTransaction(airdropSig);
       console.log("   ✅ Airdrop Successful!");
     } catch (e) {
-      console.error("   ❌ Airdrop failed (likely rate-limited). Please fund the address above and run again.");
+      console.error("   ❌ Devnet airdrop failed (rate-limited).");
+      console.error("   💡 Please ensure you have a standard Solana CLI wallet at ~/.config/solana/id.json with some Devnet SOL.");
       process.exit(1);
     }
   }
