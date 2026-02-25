@@ -37,8 +37,9 @@ async function run() {
       await connection.confirmTransaction(airdropSig);
       console.log("   ✅ Airdrop Successful!");
     } catch (e) {
-      console.error("   ❌ Devnet airdrop failed (rate-limited).");
-      console.error("   💡 Please ensure you have a standard Solana CLI wallet at ~/.config/solana/id.json with some Devnet SOL.");
+      console.error("\n   ❌ Devnet airdrop failed (Faucet is likely rate-limited by IP).");
+      console.error(`   💡 Please manually send Devnet SOL to: ${walletKeypair.publicKey.toBase58()}`);
+      console.error("   Or ensure you have a standard funded Solana CLI wallet at ~/.config/solana/id.json");
       process.exit(1);
     }
   }
