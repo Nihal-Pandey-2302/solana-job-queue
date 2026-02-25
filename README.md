@@ -4,9 +4,9 @@
 
 > _Demonstrating how Web2 patterns like Redis Queue, Celery, AWS SQS, and RabbitMQ can be redesigned using Solana's account model and runtime guarantees._
 
-<a href="https://img.shields.io/badge/Built%20with-Anchor-blue" target="_blank" rel="noopener noreferrer">![Built with Anchor</a>](https://anchor-lang.com)
-<a href="https://img.shields.io/badge/Deployed-Devnet-green" target="_blank" rel="noopener noreferrer">![Solana Devnet</a>](https://explorer.solana.com)
-<a href="https://img.shields.io/badge/License-MIT-yellow.svg" target="_blank" rel="noopener noreferrer">![License: MIT</a>](https://opensource.org/licenses/MIT)
+<a href="https://anchor-lang.com" target="_blank"><img src="https://img.shields.io/badge/Built%20with-Anchor-blue" alt="Built with Anchor" /></a>
+<a href="https://explorer.solana.com" target="_blank"><img src="https://img.shields.io/badge/Deployed-Devnet-green" alt="Solana Devnet" /></a>
+<a href="https://opensource.org/licenses/MIT" target="_blank"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
 
 ---
 
