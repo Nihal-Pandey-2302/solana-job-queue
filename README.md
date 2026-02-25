@@ -8,6 +8,8 @@
 <a href="https://explorer.solana.com" target="_blank"><img src="https://img.shields.io/badge/Deployed-Devnet-green" alt="Solana Devnet" /></a>
 <a href="https://opensource.org/licenses/MIT" target="_blank"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
 
+### [🎥 Watch the 3-Minute Architecture & Live Demo Video](https://youtu.be/76MjioAUL90)
+
 ---
 
 ## 📖 Overview
