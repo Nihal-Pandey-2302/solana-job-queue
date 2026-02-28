@@ -10,6 +10,8 @@
 
 ### [🎥 Watch the 3-Minute Architecture & Live Demo Video](https://youtu.be/76MjioAUL90) | [🌐 Try the Live Web App](https://solana-job-queue.vercel.app/)
 
+![Solana Job Queue Dashboard](homepage.png)
+
 ---
 
 ## 📖 Overview
@@ -167,6 +169,8 @@ stateDiagram-v2
 ### 👨‍⚖️ How to Use (For Judges)
 
 The easiest way to evaluate the project is via the Live Web App deployed on Vercel.
+
+![Queue Details](oldqueue.png)
 
 1. Visit **[https://solana-job-queue.vercel.app/](https://solana-job-queue.vercel.app/)**
 2. Connect a Devnet-funded Solana wallet (e.g., Phantom).
