@@ -42,10 +42,36 @@ pub fn handler(ctx: Context<ProcessTask>) -> Result<()> {
         require!(now >= task.execute_after, QueueError::TaskNotYetScheduled);
     }
 
+    // Enforce task dependencies (DAG)
+    if let Some(dep_id) = task.depends_on {
+        let mut remaining_accounts_iter = ctx.remaining_accounts.iter();
+        let dep_account_info = next_account_info(&mut remaining_accounts_iter)
+            .map_err(|_| QueueError::InvalidDependencyPda)?;
+            
+        // 1. Authenticate PDA derivation to prevent spoofing
+        let expected_pda = Pubkey::find_program_address(
+            &[b"task", queue.key().as_ref(), &dep_id.to_le_bytes()],
+            ctx.program_id,
+        ).0;
+        
+        require!(expected_pda == dep_account_info.key(), QueueError::InvalidDependencyPda);
+        
+        // 2. Load and verify dependency state
+        let dep_data = dep_account_info.try_borrow_data()?;
+        let mut data_slice: &[u8] = &dep_data;
+        let dep_task = Task::try_deserialize(&mut data_slice)
+            .map_err(|_| QueueError::InvalidDependencyPda)?;
+            
+        require!(dep_task.status == TaskStatus::Completed, QueueError::DependencyNotMet);
+    }
+
     // State transition: Pending → Processing
     task.status = TaskStatus::Processing;
     task.worker = ctx.accounts.authority.key();
     task.started_at = now;
+
+    // Remove task from priority heap
+    queue.remove_task(task.task_id);
 
     // Update queue counters
     queue.pending_count = queue.pending_count.checked_sub(1).unwrap();

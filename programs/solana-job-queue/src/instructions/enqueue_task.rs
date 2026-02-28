@@ -31,11 +31,20 @@ pub fn handler(
     payload: String,
     priority: u8,
     execute_after: i64,
+    depends_on: Option<u64>,
 ) -> Result<()> {
     require!(payload.len() <= 512, QueueError::PayloadTooLong);
 
     let queue = &mut ctx.accounts.queue;
     let task_id = queue.total_tasks;
+
+    // Push to the priority heap. This happens before task initialization to ensure
+    // we don't increment counters and create a task if the heap is full. 
+    // This maintains the O(log n) performance bound by capping pending high-priority tasks.
+    queue.push(crate::state::HeapItem {
+        task_id,
+        priority,
+    })?;
 
     // Initialize the task account
     let task = &mut ctx.accounts.task;
@@ -50,6 +59,7 @@ pub fn handler(
     task.retry_count = 0;
     task.max_retries = queue.max_retries;
     task.execute_after = execute_after;
+    task.depends_on = depends_on;
     task.created_at = Clock::get()?.unix_timestamp;
     task.started_at = 0;
     task.completed_at = 0;

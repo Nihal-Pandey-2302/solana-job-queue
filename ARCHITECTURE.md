@@ -33,6 +33,22 @@ This document provides a detailed analysis of how traditional backend job queue 
 
 ---
 
+## Advanced Patterns
+
+By implementing complex Web2 data structures natively on-chain, we can achieve high-performance coordination without sacrificing decentralization.
+
+### On-Chain Priority Max-Heap
+
+- **Web2 Compare:** Redis Sorted Sets (`ZADD`), Kubernetes Job Priorities
+- **Solana Implementation:** The `Queue` PDA contains an embedded `[HeapItem; 64]` array acting as a binary Max-Heap. When tasks are enqueued, their `task_id` and `priority` are aggressively bubbled-up in **O(log n)** time. When workers claim tasks, they predictably pop from the top of the heap and bubble-down. This mathematically forces workers to process the highest priority tasks first deterministically, completely avoiding O(n) linear off-chain scans.
+
+### Directed Acyclic Graph (DAG) Dependencies
+
+- **Web2 Compare:** Apache Airflow DAGs, Celery Chains
+- **Solana Implementation:** Tasks can define a `depends_on` parameter linking them to a prerequisite `task_id`. During the `process_task` instruction, the worker must authentically pass the prerequisite task's PDA in the `remaining_accounts`. The program validates the PDA derivation hash constraint and verifies its `status == Completed` in **O(1)** time before allowing the dependent task to execute.
+
+---
+
 ## State Management
 
 ### Web2: Mutable Rows in a Datastore

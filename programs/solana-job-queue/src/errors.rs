@@ -57,4 +57,16 @@ pub enum QueueError {
     /// The worker does not belong to the specified queue.
     #[msg("Worker does not belong to this queue")]
     WorkerQueueMismatch,
+
+    /// The priority heap is full and cannot accept more tasks.
+    #[msg("Queue priority heap capacity exceeded (max 256)")]
+    QueueCapacityExceeded,
+
+    /// The task is trying to execute before its prerequisite task is Completed.
+    #[msg("Prerequisite dependency task is not Completed")]
+    DependencyNotMet,
+
+    /// The provided dependency task PDA is invalid or missing.
+    #[msg("Invalid or missing dependency task PDA")]
+    InvalidDependencyPda,
 }

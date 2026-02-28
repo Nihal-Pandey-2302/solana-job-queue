@@ -117,6 +117,23 @@ graph TD
     D --> H["Failed"]
 ```
 
+## 🧠 Advanced Features
+
+#### 🔺 Priority Heap Processing
+
+Tasks are processed using a native on-chain Binary Max-Heap data structure, ensuring **O(log n)** task selection instead of O(n) linear scanning. Higher priority tasks (0-255 scale) are aggressively bubbled up and processed first, guaranteeing deterministic SLA enforcement even under massive load.
+
+#### 🔗 Task Dependencies (DAG)
+
+Tasks can specify deterministic dependencies on other tasks natively at the PDA level. Dependent tasks cannot be maliciously or accidentally processed by workers until their prerequisite cryptographic task PDA evaluates to `Completed`.
+
+```bash
+# Enqueue task B that depends on task A
+$CLI enqueue --queue <QUEUE> \
+  --payload '{"step":"deploy"}' \
+  --depends-on 0  # task_id of task A
+```
+
 ## 🔄 State Machine
 
 ```mermaid
@@ -139,11 +156,12 @@ stateDiagram-v2
 
 **Devnet Transaction Proofs:**
 
-1. <a href="https://explorer.solana.com/tx/5wWxariPDxHjANQhGg2G5fXe84qHmDdGvhy7u7pq4Mq6k7rFVvCs9pAkVvs6Ew27xkVukY44Nybn3auAomhrA55J?cluster=devnet" target="_blank" rel="noopener noreferrer">Initialize Queue</a>
-2. <a href="https://explorer.solana.com/tx/4YP3C8Vza6f4FZ6QWSbjyXyhKJuovZM4MohZoXDSy3tWDVT416ct3D2Ep1t6mvrGMtSUU1RjoHdv5hFdMmAsfU7q?cluster=devnet" target="_blank" rel="noopener noreferrer">Register Worker</a>
-3. <a href="https://explorer.solana.com/tx/4L3zTro4Ds9HnBFt6PgdpANcSw7DYAskGPejeFewuwyMCdjjkKL71FSZE2xG6TMEy6zvWBvsyNnVR5KU62myswJC?cluster=devnet" target="_blank" rel="noopener noreferrer">Enqueue Task</a>
-4. <a href="https://explorer.solana.com/tx/499D2DkYBjSxeUWjgWn68gekC1r3anQnwKeLd1DpRi3LxuyLMqBqR4bMibWTnRAvGSFBmyyxADKVY9qGcWHZ9Ca2?cluster=devnet" target="_blank" rel="noopener noreferrer">Process Task</a>
-5. <a href="https://explorer.solana.com/tx/5hnKHrDmQzydkPKqdc7MsxSHZhXyoujnie9LhYeKBnXLf7AoJi4HcEaRXk7z8N2xVwwYm1gUnkXGEwaMwFvJHwQ6?cluster=devnet" target="_blank" rel="noopener noreferrer">Complete Task</a>
+1. <a href="https://explorer.solana.com/tx/2Lpz4nYrx6qJtaPciQ81847f8brQT3UbQRJxZgPVnZaWNmEXRwBbcb5fYhz6nTDTvNDCyWFxab4rm4u3bj8XwqA7?cluster=devnet" target="_blank" rel="noopener noreferrer">Initialize Queue</a>
+2. <a href="https://explorer.solana.com/tx/4pB8M5TxYUwpRizEp1Vm5eFCR3PUwB4d7FnDHeCj5CsD7ZuUR7bG3x4nS5cZ3kKwQQ2guEcRxaR75ipzS19H2h8m?cluster=devnet" target="_blank" rel="noopener noreferrer">Register Worker</a>
+3. <a href="https://explorer.solana.com/tx/4ZGPhVgUY5qCvwALkBzUY1zZpBQGZr9vLxKT1eCFNXVjwmZZBXbdh5Gne2fBuzSzVVM4BaLZaoPPcuNqjPo3Y8bd?cluster=devnet" target="_blank" rel="noopener noreferrer">Enqueue Task B (High Priority)</a>
+4. <a href="https://explorer.solana.com/tx/2TQMQeqaHFqpVLZnEcYAyR4wc1mnRdbi28FNAMjg1TEcwhYU78CAYggdcYFjiYodSJhiBv3p7nRhVusmpkafrK7u?cluster=devnet" target="_blank" rel="noopener noreferrer">Enqueue Task C (Dependent on A)</a>
+5. <a href="https://explorer.solana.com/tx/5nYdVsTFpbTWUmqFW3oUxLiqwxqA5fWNmaEw7kvXJoxVzhdVq8v3eDuSkUhyJZ74uFARyzW8Wjj2EfYSqYJtj8Np?cluster=devnet" target="_blank" rel="noopener noreferrer">Process Task B (O(log n) Max-Heap Pop Confirmed)</a>
+6. <a href="https://explorer.solana.com/tx/2orP7bq3Yo5uXuA4XXf4x8Mj9ujfnavk83AokRYvM7KBji3LUd49yHW3qeqY14qAkAdhp3wqUrX3xMe5B7sEKEbZ?cluster=devnet" target="_blank" rel="noopener noreferrer">Process Task C (DAG Execution Confirmed)</a>
 
 ### Prerequisites
 
@@ -180,6 +198,47 @@ Want to see the system in action? Run the automated Devnet demo!
 ```bash
 # This will execute a full Queue and Task Lifecycle directly on Devnet
 npm run demo
+```
+
+### 📈 Demo Output (Priority Heap & DAG)
+
+![Demo Output](demo.png)
+
+```console
+========================================
+🚀 SOLANA JOB QUEUE — LIVE DEVNET DEMO
+========================================
+
+1️⃣ Using local Solana CLI wallet (~/.config/solana/id.json)...
+
+3️⃣ Initializing Queue ('demo-queue-1234')...
+   ✅ Queue Created! TX: ...
+
+4️⃣ Registering Worker...
+   ✅ Worker Registered! TX: ...
+
+5️⃣ Enqueuing Tasks to demonstrate Priority Heap and DAG Dependencies...
+   -> Enqueuing Task A (Priority: 10, Prerequisite for C)
+      ✅ TX: ...
+   -> Enqueuing Task B (Priority: 255)
+      ✅ TX: ...
+   -> Enqueuing Task C (Dependent on Task A)
+      ✅ TX: ...
+
+6️⃣ Worker Processing Tasks (Evaluating Max-Heap O(log n))...
+   -> Worker claims first task. Heap should yield Task B (Priority 255) first.
+      ✅ Claimed Task B (High Priority)! TX: ...
+   -> Completing Task B...
+
+7️⃣ Evaluating DAG Dependencies...
+   -> Worker attempts to claim Task C (Dependent on A).
+      ❌ Wait, this should have failed!
+      ✅ Expected Failure: DependencyNotMet. Task A is not completed yet.
+   -> Worker claims and completes Task A (Prerequisite).
+   -> Worker claims Task C now that A is complete.
+      ✅ Successfully claimed Task C! TX: ...
+
+🎉 DEMO COMPLETE! Priority Heap & DAG Constraints verified on-chain.
 ```
 
 ### Deploy to Devnet
@@ -334,14 +393,15 @@ anchor test
 
 ### Transaction Links
 
-| Operation       | Transaction                                                                                                                                                                                                     |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Deploy Program  | <a href="https://explorer.solana.com/address/CADUfHFQg6ywjsUbkzdFxVgQ7Hh7bN2YPgxS5QBjeX4n?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a>                                        |
-| Create Queue    | <a href="https://explorer.solana.com/tx/5wWxariPDxHjANQhGg2G5fXe84qHmDdGvhy7u7pq4Mq6k7rFVvCs9pAkVvs6Ew27xkVukY44Nybn3auAomhrA55J?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
-| Register Worker | <a href="https://explorer.solana.com/tx/4YP3C8Vza6f4FZ6QWSbjyXyhKJuovZM4MohZoXDSy3tWDVT416ct3D2Ep1t6mvrGMtSUU1RjoHdv5hFdMmAsfU7q?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
-| Enqueue Task    | <a href="https://explorer.solana.com/tx/4L3zTro4Ds9HnBFt6PgdpANcSw7DYAskGPejeFewuwyMCdjjkKL71FSZE2xG6TMEy6zvWBvsyNnVR5KU62myswJC?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
-| Process Task    | <a href="https://explorer.solana.com/tx/499D2DkYBjSxeUWjgWn68gekC1r3anQnwKeLd1DpRi3LxuyLMqBqR4bMibWTnRAvGSFBmyyxADKVY9qGcWHZ9Ca2?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
-| Complete Task   | <a href="https://explorer.solana.com/tx/5hnKHrDmQzydkPKqdc7MsxSHZhXyoujnie9LhYeKBnXLf7AoJi4HcEaRXk7z8N2xVwwYm1gUnkXGEwaMwFvJHwQ6?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| Operation                                    | Transaction                                                                                                                                                                                                     |
+| -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Deploy Program**                           | <a href="https://explorer.solana.com/address/CADUfHFQg6ywjsUbkzdFxVgQ7Hh7bN2YPgxS5QBjeX4n?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a>                                        |
+| **Initialize Queue**                         | <a href="https://explorer.solana.com/tx/2Lpz4nYrx6qJtaPciQ81847f8brQT3UbQRJxZgPVnZaWNmEXRwBbcb5fYhz6nTDTvNDCyWFxab4rm4u3bj8XwqA7?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| **Register Worker**                          | <a href="https://explorer.solana.com/tx/4pB8M5TxYUwpRizEp1Vm5eFCR3PUwB4d7FnDHeCj5CsD7ZuUR7bG3x4nS5cZ3kKwQQ2guEcRxaR75ipzS19H2h8m?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| **Enqueue Task B (High Priority)**           | <a href="https://explorer.solana.com/tx/4ZGPhVgUY5qCvwALkBzUY1zZpBQGZr9vLxKT1eCFNXVjwmZZBXbdh5Gne2fBuzSzVVM4BaLZaoPPcuNqjPo3Y8bd?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| **Enqueue Task C (Dependent on A)**          | <a href="https://explorer.solana.com/tx/2TQMQeqaHFqpVLZnEcYAyR4wc1mnRdbi28FNAMjg1TEcwhYU78CAYggdcYFjiYodSJhiBv3p7nRhVusmpkafrK7u?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| **Process Task B (Max-Heap Pop)**            | <a href="https://explorer.solana.com/tx/5nYdVsTFpbTWUmqFW3oUxLiqwxqA5fWNmaEw7kvXJoxVzhdVq8v3eDuSkUhyJZ74uFARyzW8Wjj2EfYSqYJtj8Np?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
+| **Process Task C (DAG Execution Confirmed)** | <a href="https://explorer.solana.com/tx/2orP7bq3Yo5uXuA4XXf4x8Mj9ujfnavk83AokRYvM7KBji3LUd49yHW3qeqY14qAkAdhp3wqUrX3xMe5B7sEKEbZ?cluster=devnet" target="_blank" rel="noopener noreferrer">View on Explorer</a> |
 
 ---
 

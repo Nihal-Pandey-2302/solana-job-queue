@@ -58,6 +58,12 @@ pub fn handler(ctx: Context<FailTask>) -> Result<()> {
         task.started_at = 0;
         queue.pending_count = queue.pending_count.checked_add(1).unwrap();
 
+        // Push back onto the priority heap so workers can find it again
+        let _ = queue.push(crate::state::HeapItem {
+            task_id: task.task_id,
+            priority: task.priority,
+        });
+
         msg!(
             "Task #{} failed (attempt {}/{}), re-queued",
             task.task_id,

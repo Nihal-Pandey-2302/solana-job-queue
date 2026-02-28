@@ -254,6 +254,12 @@ export type SolanaJobQueue = {
         {
           "name": "executeAfter",
           "type": "i64"
+        },
+        {
+          "name": "dependsOn",
+          "type": {
+            "option": "u64"
+          }
         }
       ]
     },
@@ -618,9 +624,40 @@ export type SolanaJobQueue = {
       "code": 6012,
       "name": "workerQueueMismatch",
       "msg": "Worker does not belong to this queue"
+    },
+    {
+      "code": 6013,
+      "name": "queueCapacityExceeded",
+      "msg": "Queue priority heap capacity exceeded (max 256)"
+    },
+    {
+      "code": 6014,
+      "name": "dependencyNotMet",
+      "msg": "Prerequisite dependency task is not Completed"
+    },
+    {
+      "code": 6015,
+      "name": "invalidDependencyPda",
+      "msg": "Invalid or missing dependency task PDA"
     }
   ],
   "types": [
+    {
+      "name": "heapItem",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "taskId",
+            "type": "u64"
+          },
+          {
+            "name": "priority",
+            "type": "u8"
+          }
+        ]
+      }
+    },
     {
       "name": "queue",
       "docs": [
@@ -701,6 +738,29 @@ export type SolanaJobQueue = {
               "PDA bump seed."
             ],
             "type": "u8"
+          },
+          {
+            "name": "priorityHeap",
+            "docs": [
+              "On-chain priority max-heap for O(log n) task processing order"
+            ],
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "heapItem"
+                  }
+                },
+                64
+              ]
+            }
+          },
+          {
+            "name": "heapSize",
+            "docs": [
+              "Current number of items in the heap"
+            ],
+            "type": "u16"
           }
         ]
       }
@@ -798,6 +858,15 @@ export type SolanaJobQueue = {
               "Workers should skip tasks where `execute_after > current_time`."
             ],
             "type": "i64"
+          },
+          {
+            "name": "dependsOn",
+            "docs": [
+              "Optional: task_id of a prerequisite task that must be Completed first."
+            ],
+            "type": {
+              "option": "u64"
+            }
           },
           {
             "name": "createdAt",

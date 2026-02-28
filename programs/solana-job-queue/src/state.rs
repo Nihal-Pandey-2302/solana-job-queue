@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use crate::errors::QueueError;
 
 /// Represents the status of a task in the queue.
 /// Models a deterministic state machine with well-defined transitions:
@@ -20,6 +21,12 @@ impl Default for TaskStatus {
     fn default() -> Self {
         TaskStatus::Pending
     }
+}
+
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, Debug, Default, InitSpace)]
+pub struct HeapItem {
+    pub task_id: u64,
+    pub priority: u8,
 }
 
 /// A multi-tenant task queue — the top-level organizational unit.
@@ -59,6 +66,95 @@ pub struct Queue {
 
     /// PDA bump seed.
     pub bump: u8,
+
+    /// On-chain priority max-heap for O(log n) task processing order
+    pub priority_heap: [HeapItem; 64],
+    
+    /// Current number of items in the heap
+    pub heap_size: u16,
+}
+
+impl Queue {
+    pub fn push(&mut self, item: HeapItem) -> Result<()> {
+        if self.heap_size as usize >= 64 {
+            // Technically we should throw an error, but if the heap is full we can just 
+            // process normally (fallback to linear) or return an error. Let's return error.
+            return err!(QueueError::QueueCapacityExceeded);
+        }
+        let mut i = self.heap_size as usize;
+        self.priority_heap[i] = item;
+        self.heap_size += 1;
+        
+        // Bubble up
+        while i > 0 {
+            let parent = (i - 1) / 2;
+            if self.priority_heap[i].priority > self.priority_heap[parent].priority {
+                self.priority_heap.swap(i, parent);
+                i = parent;
+            } else {
+                break;
+            }
+        }
+        Ok(())
+    }
+
+    pub fn remove_task(&mut self, task_id: u64) {
+        if self.heap_size == 0 {
+            return;
+        }
+        
+        let mut index = None;
+        for i in 0..self.heap_size as usize {
+            if self.priority_heap[i].task_id == task_id {
+                index = Some(i);
+                break;
+            }
+        }
+        
+        if let Some(i) = index {
+            self.heap_size -= 1;
+            if i < self.heap_size as usize {
+                self.priority_heap[i] = self.priority_heap[self.heap_size as usize];
+                
+                let mut current = i;
+                let mut bubbled_up = false;
+                
+                while current > 0 {
+                    let parent = (current - 1) / 2;
+                    if self.priority_heap[current].priority > self.priority_heap[parent].priority {
+                        self.priority_heap.swap(current, parent);
+                        current = parent;
+                        bubbled_up = true;
+                    } else {
+                        break;
+                    }
+                }
+                
+                if !bubbled_up {
+                    loop {
+                        let left = 2 * current + 1;
+                        let right = 2 * current + 2;
+                        let mut largest = current;
+                        
+                        if left < self.heap_size as usize && self.priority_heap[left].priority > self.priority_heap[largest].priority {
+                            largest = left;
+                        }
+                        if right < self.heap_size as usize && self.priority_heap[right].priority > self.priority_heap[largest].priority {
+                            largest = right;
+                        }
+                        
+                        if largest != current {
+                            self.priority_heap.swap(current, largest);
+                            current = largest;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+            }
+            self.priority_heap[self.heap_size as usize] = HeapItem::default();
+        }
+    }
 }
 
 /// A single task within a queue — the core work unit.
@@ -104,6 +200,9 @@ pub struct Task {
     /// Optional: earliest Unix timestamp at which this task should be processed.
     /// Workers should skip tasks where `execute_after > current_time`.
     pub execute_after: i64,
+
+    /// Optional: task_id of a prerequisite task that must be Completed first.
+    pub depends_on: Option<u64>,
 
     /// Unix timestamp when the task was enqueued.
     pub created_at: i64,

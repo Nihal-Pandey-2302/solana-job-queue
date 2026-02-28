@@ -90,8 +90,9 @@ pub mod solana_job_queue {
         payload: String,
         priority: u8,
         execute_after: i64,
+        depends_on: Option<u64>,
     ) -> Result<()> {
-        instructions::enqueue_task::handler(ctx, payload, priority, execute_after)
+        instructions::enqueue_task::handler(ctx, payload, priority, execute_after, depends_on)
     }
 
     /// Worker claims a pending task for processing.
