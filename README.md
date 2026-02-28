@@ -18,6 +18,14 @@
 
 Job queues are everywhere in backend engineering - they power email delivery, webhook processing, notification systems, background data pipelines, and scheduled tasks. This project rebuilds the core logic of a production job queue as a **Solana on-chain program**, demonstrating how familiar Web2 patterns translate to blockchain architecture.
 
+## 🌐 Try It Now (No Setup Required)
+
+**Live App:** https://solana-job-queue.vercel.app/
+
+1. Open the link
+2. Connect a Phantom wallet on Devnet
+3. Click any Global Devnet Queue to explore live on-chain data
+
 ### Key Features
 
 - 🏢 **Multi-Tenant Queues** - Isolated queue instances per authority (like separate SQS queues)
@@ -33,6 +41,8 @@ Job queues are everywhere in backend engineering - they power email delivery, we
 ---
 
 ## 🏗️ Architecture: Web2 vs Solana
+
+> 📄 For a deep-dive analysis, see [ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ### How Job Queues Work in Web2
 
