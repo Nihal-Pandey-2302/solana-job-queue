@@ -19,10 +19,11 @@ Job queues are everywhere in backend engineering - they power email delivery, we
 ### Key Features
 
 - 🏢 **Multi-Tenant Queues** - Isolated queue instances per authority (like separate SQS queues)
-- 📨 **Task Lifecycle** - Full state machine: Pending → Processing → Completed/Failed
+- � **O(log n) Priority Max-Heap** - Native `[HeapItem; 64]` tree bubbled directly in the Queue PDA
+- 🔗 **DAG Task Dependencies** - `O(1)` cryptographic prerequisite validation via `remaining_accounts`
+- �📨 **Task Lifecycle** - Full state machine: Pending → Processing → Completed/Failed
 - 🔄 **Automatic Retries** - Failed tasks re-queue up to N times (like Dead Letter Queues)
 - ⏰ **Scheduled Execution** - Tasks with `execute_after` timestamps (like SQS DelaySeconds)
-- ⚡ **Priority Levels** - 0-255 priority range for task ordering
 - 👷 **Worker Registry** - On-chain worker registration with performance tracking
 - 🔒 **Access Control** - Only registered, active workers can process tasks
 - 💰 **Rent Reclamation** - Close finished tasks to get SOL back
@@ -69,14 +70,14 @@ Job queues are everywhere in backend engineering - they power email delivery, we
                     └──────────────────────────────────┘
 ```
 
-| Component       | Implementation                                                      |
-| --------------- | ------------------------------------------------------------------- |
-| **State**       | PDA accounts - each task is a separate account                      |
-| **Concurrency** | Solana runtime's account write-locks (FREE - no distributed locks!) |
-| **Ordering**    | Sequential task IDs + priority field per task                       |
-| **Auth**        | PDA ownership + `Signer` constraints + `has_one` checks             |
-| **Retry**       | `retry_count` / `max_retries` → automatic re-queue to Pending       |
-| **Cleanup**     | `close_task` reclaims rent (economic incentive, not just cleanup)   |
+| Component       | Implementation                                                        |
+| --------------- | --------------------------------------------------------------------- |
+| **State**       | PDA accounts - each task is a separate account                        |
+| **Concurrency** | Solana runtime's account write-locks (FREE - no distributed locks!)   |
+| **Ordering**    | Native `[HeapItem; 64]` Binary Max-Heap enforcing `O(log n)` priority |
+| **Auth & DAG**  | PDA uniqueness + `remaining_accounts` prerequisite evaluation         |
+| **Retry**       | `retry_count` / `max_retries` → automatic re-queue to Pending         |
+| **Cleanup**     | `close_task` reclaims rent (economic incentive, not just cleanup)     |
 
 ### Tradeoffs & Constraints
 
@@ -338,15 +339,16 @@ $CLI close-task --queue <QUEUE_ADDRESS> --task-id 0
 
 The test suite covers 17 scenarios across 5 categories:
 
-| Category             | Tests | What's Verified                                                            |
-| -------------------- | ----- | -------------------------------------------------------------------------- |
-| Queue Management     | 2     | Creation, name validation                                                  |
-| Worker Management    | 3     | Registration, deregistration (soft-delete)                                 |
-| Happy Path Lifecycle | 5     | Enqueue → Process → Complete → Close, rent reclamation                     |
-| Failure & Retry      | 4     | Retry 1/3, 2/3, 3/3 (dead letter), close failed                            |
-| Scheduled Tasks      | 2     | Future scheduling, premature process rejection                             |
-| Access Control       | 4     | Inactive worker, unauthorized worker, non-closable pending, payload limits |
-| Multi-Tenant         | 2     | Separate queues, same-name different authority                             |
+| Category              | Tests | What's Verified                                                            |
+| --------------------- | ----- | -------------------------------------------------------------------------- |
+| Queue Management      | 2     | Creation, name validation                                                  |
+| Worker Management     | 3     | Registration, deregistration (soft-delete)                                 |
+| Happy Path Lifecycle  | 5     | Enqueue → Process → Complete → Close, rent reclamation                     |
+| Failure & Retry       | 4     | Retry 1/3, 2/3, 3/3 (dead letter), close failed                            |
+| Scheduled Tasks       | 2     | Future scheduling, premature process rejection                             |
+| Access Control        | 4     | Inactive worker, unauthorized worker, non-closable pending, payload limits |
+| Multi-Tenant          | 2     | Separate queues, same-name different authority                             |
+| **Advanced Features** | 3     | **O(log n)** Max-Heap Priority routing, **DAG** dependency enforcement     |
 
 ```bash
 # Run tests
@@ -383,6 +385,10 @@ anchor test
 #   Multi-Tenant Isolation
 #     ✓ creates a second queue with a different name
 #     ✓ different users can create queues with the same name
+#   Advanced Features: Priority Heap & Dependencies
+#     ✓ processes high-priority task before low-priority (Max-Heap logic)
+#     ✓ rejects processing a dependent task if prerequisite is not Completed
+#     ✓ allows processing dependent task once prerequisite is Completed
 ```
 
 ---
