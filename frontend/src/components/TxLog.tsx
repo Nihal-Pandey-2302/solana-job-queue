@@ -10,8 +10,6 @@ export interface TxRecord {
 }
 
 export function TxLog({ logs }: { logs: TxRecord[] }) {
-  if (logs.length === 0) return null;
-
   return (
     <div className="panel mt-6">
       <div className="flex items-center gap-2 border-b border-border pb-3 mb-3">
@@ -19,8 +17,13 @@ export function TxLog({ logs }: { logs: TxRecord[] }) {
         <h3 className="text-sm font-medium">Session Transaction Log</h3>
       </div>
       
-      <div className="space-y-2">
-        {logs.map((log) => (
+      {logs.length === 0 ? (
+          <div className="text-sm text-slate-500 py-8 text-center italic">
+             No transactions have been submitted in this session yet.
+          </div>
+      ) : (
+          <div className="space-y-2">
+            {logs.map((log) => (
           <div key={log.id} className="flex items-center justify-between text-xs p-2 rounded-md hover:bg-surfaceHover transition-colors">
             <div className="flex items-center gap-3">
               <span className="text-textSecondary w-16 text-right font-mono">
@@ -40,7 +43,8 @@ export function TxLog({ logs }: { logs: TxRecord[] }) {
             </a>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

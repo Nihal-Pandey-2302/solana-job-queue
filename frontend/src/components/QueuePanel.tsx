@@ -175,9 +175,6 @@ export function QueuePanel({
                      </span>
                  </div>
              </div>
-             <button className="text-xs text-textSecondary hover:text-textPrimary" onClick={() => fetchQueue(null)}>
-                 Close Workspace
-             </button>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
@@ -186,6 +183,14 @@ export function QueuePanel({
             <StatCard label="Processing" value={queueData.processingCount.toString()} color="text-blue-500" />
             <StatCard label="Completed" value={queueData.completedCount.toString()} color="text-green-500" />
             <StatCard label="Failed" value={queueData.failedCount.toString()} color="text-red-500" />
+          </div>
+          <div className="flex justify-center mt-6 pt-2">
+              <button 
+                  className="text-xs text-slate-500 hover:text-slate-300 underline underline-offset-4 transition-colors" 
+                  onClick={() => fetchQueue(null)}
+              >
+                  Close Workspace (Return to Dashboard)
+              </button>
           </div>
         </div>
       )}
