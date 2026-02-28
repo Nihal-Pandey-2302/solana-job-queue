@@ -8,7 +8,7 @@
 <a href="https://explorer.solana.com" target="_blank"><img src="https://img.shields.io/badge/Deployed-Devnet-green" alt="Solana Devnet" /></a>
 <a href="https://opensource.org/licenses/MIT" target="_blank"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
 
-### [🎥 Watch the 3-Minute Architecture & Live Demo Video](https://youtu.be/76MjioAUL90)
+### [🎥 Watch the 3-Minute Architecture & Live Demo Video](https://youtu.be/76MjioAUL90) | [🌐 Try the Live Web App](https://solana-job-queue.vercel.app/)
 
 ---
 
@@ -163,6 +163,17 @@ stateDiagram-v2
 4. <a href="https://explorer.solana.com/tx/2TQMQeqaHFqpVLZnEcYAyR4wc1mnRdbi28FNAMjg1TEcwhYU78CAYggdcYFjiYodSJhiBv3p7nRhVusmpkafrK7u?cluster=devnet" target="_blank" rel="noopener noreferrer">Enqueue Task C (Dependent on A)</a>
 5. <a href="https://explorer.solana.com/tx/5nYdVsTFpbTWUmqFW3oUxLiqwxqA5fWNmaEw7kvXJoxVzhdVq8v3eDuSkUhyJZ74uFARyzW8Wjj2EfYSqYJtj8Np?cluster=devnet" target="_blank" rel="noopener noreferrer">Process Task B (O(log n) Max-Heap Pop Confirmed)</a>
 6. <a href="https://explorer.solana.com/tx/2orP7bq3Yo5uXuA4XXf4x8Mj9ujfnavk83AokRYvM7KBji3LUd49yHW3qeqY14qAkAdhp3wqUrX3xMe5B7sEKEbZ?cluster=devnet" target="_blank" rel="noopener noreferrer">Process Task C (DAG Execution Confirmed)</a>
+
+### 👨‍⚖️ How to Use (For Judges)
+
+The easiest way to evaluate the project is via the Live Web App deployed on Vercel.
+
+1. Visit **[https://solana-job-queue.vercel.app/](https://solana-job-queue.vercel.app/)**
+2. Connect a Devnet-funded Solana wallet (e.g., Phantom).
+3. Click **"Initialize Queue"** to create your own isolated workspace, or simply click any of the active **Global Devnet Queues** populated on the dashboard.
+4. In the `Worker` panel, click **"Register as Worker"**.
+5. Under `Task Actions`, enqueue several tasks with different `.priority` levels.
+6. Click **"Process Next Priority Task"** to verify that the program deterministically enforces **O(log n)** Max-Heap ordering by serving the highest priority task first!
 
 ### Prerequisites
 
