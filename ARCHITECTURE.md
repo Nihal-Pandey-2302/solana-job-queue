@@ -367,4 +367,15 @@ In practice, a hybrid approach often makes the most sense: use the on-chain prog
 
 ---
 
+## Client Architecture (React & TS SDK)
+
+A modern job queue isn't complete without visibility tools. The project includes a React/Vite dashboard illustrating how Web3 frontends interface with the on-chain queue:
+
+1. **Wallet Adapter:** Eliminates traditional API Keys or JWTs; authentication is performed via wallet signatures (e.g., Phantom).
+2. **Anchor SDK:** Generates strictly-typed TypeScript classes directly from the Rust IDL (Interface Definition Language), providing a familiar ORM-like experience in JavaScript (`program.methods.enqueueTask().accounts({...}).rpc()`).
+3. **Data Fetching:** Instead of paginating a standard REST API `/tasks?queue_id=X`, the frontend uses Solana's `getProgramAccounts` with Base58 memcmp filters to fetch and decode account data directly from the RPC node matching specific queue identifiers.
+4. **Real-time State:** React Hooks automatically re-render the dashboard as the parsed on-chain Task accounts transition from `Pending` → `Processing` → `Completed`.
+
+---
+
 _This architecture analysis is part of the [Solana Job Queue](./README.md) project, built for the Superteam "Rebuild Backend Systems as On-Chain Rust Programs" challenge._
