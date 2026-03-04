@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::errors::QueueError;
+use crate::events::*;
 use crate::state::{Queue, Task, TaskStatus, Worker};
 
 /// A worker reports that a task has failed.
@@ -82,6 +83,23 @@ pub fn handler(ctx: Context<FailTask>) -> Result<()> {
             task.retry_count
         );
     }
+
+    emit!(TaskFailed {
+        queue: queue.key(),
+        task_id: task.task_id,
+        worker: ctx.accounts.authority.key(),
+        retry_count: task.retry_count,
+        is_dead_letter: task.status == TaskStatus::Failed,
+    });
+
+    emit!(QueueMetricsSnapshot {
+        queue: queue.key(),
+        total_tasks: queue.total_tasks,
+        pending: queue.pending_count,
+        processing: queue.processing_count,
+        completed: queue.completed_count,
+        failed: queue.failed_count,
+    });
 
     Ok(())
 }

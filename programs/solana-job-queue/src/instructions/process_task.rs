@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::errors::QueueError;
+use crate::events::*;
 use crate::state::{Queue, Task, TaskStatus, Worker};
 
 /// A worker claims (dequeues) a pending task for processing.
@@ -27,6 +28,8 @@ pub fn handler(ctx: Context<ProcessTask>) -> Result<()> {
     let task = &mut ctx.accounts.task;
     let worker = &ctx.accounts.worker;
     let queue = &mut ctx.accounts.queue;
+
+    require!(!queue.is_paused, QueueError::QueuePaused);
 
     // Validate worker state
     require!(worker.is_active, QueueError::WorkerNotActive);
@@ -76,6 +79,13 @@ pub fn handler(ctx: Context<ProcessTask>) -> Result<()> {
     // Update queue counters
     queue.pending_count = queue.pending_count.checked_sub(1).unwrap();
     queue.processing_count = queue.processing_count.checked_add(1).unwrap();
+
+    emit!(TaskProcessed {
+        queue: queue.key(),
+        task_id: task.task_id,
+        worker: task.worker,
+        claimed_at: now,
+    });
 
     msg!(
         "Task #{} claimed by worker {}",

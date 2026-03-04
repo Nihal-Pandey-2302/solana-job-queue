@@ -4,6 +4,8 @@ import { PublicKey, SystemProgram } from '@solana/web3.js';
 import { getQueuePda } from '../utils/anchor';
 import { Loader2, Hash, Download, RefreshCw, Layers } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { MetricsChart } from './MetricsChart';
+import { WorkerLeaderboard } from './WorkerLeaderboard';
 
 export function QueuePanel({
   program,
@@ -184,6 +186,13 @@ export function QueuePanel({
             <StatCard label="Completed" value={queueData.completedCount.toString()} color="text-green-500" />
             <StatCard label="Failed" value={queueData.failedCount.toString()} color="text-red-500" />
           </div>
+
+          {/* New Dashboard Metrics */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
+            <MetricsChart queueKey={queuePda.toBase58()} />
+            <WorkerLeaderboard queueKey={queuePda.toBase58()} />
+          </div>
+
           <div className="flex justify-center mt-6 pt-2">
               <button 
                   className="text-xs text-slate-500 hover:text-slate-300 underline underline-offset-4 transition-colors" 

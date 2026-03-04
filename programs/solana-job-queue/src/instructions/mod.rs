@@ -6,6 +6,9 @@ pub mod process_task;
 pub mod complete_task;
 pub mod fail_task;
 pub mod close_task;
+pub mod update_rate_limit;
+pub mod pause_queue;
+pub mod resume_queue;
 
 pub use initialize_queue::*;
 pub use register_worker::*;
@@ -15,3 +18,6 @@ pub use process_task::*;
 pub use complete_task::*;
 pub use fail_task::*;
 pub use close_task::*;
+pub use update_rate_limit::*;
+pub use pause_queue::*;
+pub use resume_queue::*;

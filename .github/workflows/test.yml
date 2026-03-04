@@ -1,0 +1,30 @@
+name: Anchor Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Solana
+        run: sh -c "$(curl -sSfL https://release.solana.com/v1.18.0/install)"
+      - name: Install Anchor
+        run: npm install -g @coral-xyz/anchor-cli
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+            node_modules
+          key: ${{ runner.os }}-build-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install Dependencies
+        run: yarn install || npm ci
+      - name: Build & Test
+        run: |
+          export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
+          anchor build
+          anchor test

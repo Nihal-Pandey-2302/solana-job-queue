@@ -69,4 +69,16 @@ pub enum QueueError {
     /// The provided dependency task PDA is invalid or missing.
     #[msg("Invalid or missing dependency task PDA")]
     InvalidDependencyPda,
+
+    /// Rate limit exceeded
+    #[msg("Rate limit exceeded for this queue. Try again later.")]
+    RateLimitExceeded,
+
+    /// The queue is currently paused (Circuit Breaker)
+    #[msg("The queue is currently paused")]
+    QueuePaused,
+
+    /// The pause reason must be 64 characters or fewer
+    #[msg("Pause reason must be 64 characters or fewer")]
+    InvalidPauseReason,
 }

@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  solana-test-validator:
+    image: solanalabs/solana:v1.18.0
+    command: solana-test-validator --reset -q
+    ports:
+      - "8899:8899"
+      - "8900:8900"
+    healthcheck:
+      test: ["CMD", "solana", "cluster-version", "--url", "http://localhost:8899"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  app:
+    build: 
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      solana-test-validator:
+        condition: service_healthy
+    environment:
+      - VITE_RPC_URL=http://solana-test-validator:8899

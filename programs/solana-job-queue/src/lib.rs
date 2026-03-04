@@ -45,6 +45,7 @@
 use anchor_lang::prelude::*;
 
 pub mod errors;
+pub mod events;
 pub mod instructions;
 pub mod state;
 
@@ -122,5 +123,34 @@ pub mod solana_job_queue {
     /// Equivalent to cleaning up processed messages — but on Solana, you get SOL back.
     pub fn close_task(ctx: Context<CloseTask>) -> Result<()> {
         instructions::close_task::handler(ctx)
+    }
+
+    /// Allows the queue authority to configure rate limiting parameters to prevent spam.
+    ///
+    /// Equivalent to AWS API Gateway rate limit throttling.
+    pub fn update_rate_limit(
+        ctx: Context<UpdateRateLimit>,
+        enabled: bool,
+        max_tasks_per_window: u32,
+        window_duration_seconds: i64,
+    ) -> Result<()> {
+        instructions::update_rate_limit::handler(
+            ctx,
+            enabled,
+            max_tasks_per_window,
+            window_duration_seconds,
+        )
+    }
+
+    /// Triggers a Circuit Breaker to pause operations in an emergency.
+    ///
+    /// The queue will halt all enqueueing and processing.
+    pub fn pause_queue(ctx: Context<PauseQueue>, reason: String) -> Result<()> {
+        instructions::pause_queue::handler(ctx, reason)
+    }
+
+    /// Resumes normal queue operations.
+    pub fn resume_queue(ctx: Context<ResumeQueue>) -> Result<()> {
+        instructions::resume_queue::handler(ctx)
     }
 }

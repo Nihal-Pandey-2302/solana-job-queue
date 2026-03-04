@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::errors::QueueError;
+use crate::events::*;
 use crate::state::{Queue, Task, TaskStatus};
 
 /// Enqueues a new task into the specified queue.
@@ -36,6 +37,27 @@ pub fn handler(
     require!(payload.len() <= 512, QueueError::PayloadTooLong);
 
     let queue = &mut ctx.accounts.queue;
+    require!(!queue.is_paused, QueueError::QueuePaused);
+
+    let now = Clock::get()?.unix_timestamp;
+
+    // --- RATE LIMITING ---
+    if queue.rate_limit_enabled {
+        // Did the window expire? If so, reset counter and window start.
+        if now - queue.current_window_start >= queue.window_duration_seconds {
+            queue.current_window_start = now;
+            queue.current_window_count = 0;
+        }
+
+        require!(
+            queue.current_window_count < queue.max_tasks_per_window,
+            QueueError::RateLimitExceeded
+        );
+
+        queue.current_window_count = queue.current_window_count.checked_add(1).unwrap();
+    }
+    // ---------------------
+
     let task_id = queue.total_tasks;
 
     // Push to the priority heap. This happens before task initialization to ensure
@@ -60,7 +82,7 @@ pub fn handler(
     task.max_retries = queue.max_retries;
     task.execute_after = execute_after;
     task.depends_on = depends_on;
-    task.created_at = Clock::get()?.unix_timestamp;
+    task.created_at = now;
     task.started_at = 0;
     task.completed_at = 0;
     task.bump = ctx.bumps.task;
@@ -68,6 +90,14 @@ pub fn handler(
     // Update queue counters
     queue.total_tasks = queue.total_tasks.checked_add(1).unwrap();
     queue.pending_count = queue.pending_count.checked_add(1).unwrap();
+
+    emit!(TaskEnqueued {
+        queue: queue.key(),
+        task_id,
+        priority,
+        execute_after,
+        authority: ctx.accounts.creator.key(),
+    });
 
     msg!(
         "Task #{} enqueued to '{}' with priority {}",

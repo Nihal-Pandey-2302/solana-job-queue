@@ -72,6 +72,31 @@ pub struct Queue {
     
     /// Current number of items in the heap
     pub heap_size: u16,
+
+    /// Whether rate limiting is enabled for this queue
+    pub rate_limit_enabled: bool,
+
+    /// Maximum number of tasks allowed per time window
+    pub max_tasks_per_window: u32,
+
+    /// Duration of the sliding window in seconds
+    pub window_duration_seconds: i64,
+
+    /// Unix timestamp when the current rate limit window started
+    pub current_window_start: i64,
+
+    /// Number of tasks enqueued in the current window
+    pub current_window_count: u32,
+
+    /// Whether the queue is currently paused (circuit breaker)
+    pub is_paused: bool,
+
+    /// Unix timestamp when the queue was paused
+    pub paused_at: i64,
+
+    /// Reason for the pause (max 64 chars)
+    #[max_len(64)]
+    pub pause_reason: String,
 }
 
 impl Queue {

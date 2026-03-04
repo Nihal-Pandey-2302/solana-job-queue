@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 use crate::errors::QueueError;
+use crate::events::*;
 use crate::state::{Queue, Task, TaskStatus, Worker};
 
 /// A worker marks a task as successfully completed with a result.
@@ -46,6 +47,24 @@ pub fn handler(ctx: Context<CompleteTask>, result: String) -> Result<()> {
 
     // Update worker stats
     worker.tasks_completed = worker.tasks_completed.checked_add(1).unwrap();
+
+    let duration_seconds = task.completed_at - task.started_at;
+    emit!(TaskCompleted {
+        queue: queue.key(),
+        task_id: task.task_id,
+        worker: task.worker,
+        duration_seconds,
+        retry_count: task.retry_count,
+    });
+
+    emit!(QueueMetricsSnapshot {
+        queue: queue.key(),
+        total_tasks: queue.total_tasks,
+        pending: queue.pending_count,
+        processing: queue.processing_count,
+        completed: queue.completed_count,
+        failed: queue.failed_count,
+    });
 
     msg!("Task #{} completed successfully", task.task_id);
     Ok(())
