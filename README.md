@@ -8,7 +8,9 @@
 <a href="https://explorer.solana.com" target="_blank"><img src="https://img.shields.io/badge/Deployed-Devnet-green" alt="Solana Devnet" /></a>
 <a href="https://opensource.org/licenses/MIT" target="_blank"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" /></a>
 
-### [🎥 Watch the 3-Minute Architecture & Live Demo Video](https://youtu.be/76MjioAUL90) | [🌐 Try the Live Web App](https://solana-job-queue.vercel.app/)
+### [🎥 Watch the Dashboard Demo](https://youtu.be/mQnA5HmLKdk) | [🌐 Try the Live Web App](https://solana-job-queue.vercel.app/)
+
+> 📽️ Also see: [Architecture & Priority Heap Deep-Dive](https://youtu.be/76MjioAUL90)
 
 ![Solana Job Queue Dashboard](homepage.png)
 
