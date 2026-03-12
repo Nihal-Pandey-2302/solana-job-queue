@@ -213,6 +213,8 @@ The easiest way to evaluate the project is via the Live Web App deployed on Verc
 - <a href="https://www.anchor-lang.com/docs/installation" target="_blank" rel="noopener noreferrer">Anchor</a> (v0.30+)
 - <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer">Node.js</a> (v18+)
 
+> ⚠️ **Before building:** Ensure you have **Solana CLI v1.18+** — older versions ship with a `rustc` that cannot compile this project's dependencies. Run `solana-install update` to upgrade.
+
 ### Build & Test
 
 ```bash
